@@ -1,0 +1,545 @@
+/* Persona Playground App Styles */
+
+.persona-playground-app {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.app-header h1 {
+  font-size: 24px;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.app-header p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* Persona Selector Styles */
+.persona-selector {
+  padding: 16px 0;
+}
+
+.persona-selector h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.persona-selector.loading {
+  text-align: center;
+  padding: 32px;
+  color: #666;
+}
+
+.persona-dropdown {
+  margin-bottom: 16px;
+}
+
+.persona-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.persona-avatar {
+  font-size: 16px;
+}
+
+.persona-name {
+  font-weight: 500;
+}
+
+.persona-preview {
+  margin-top: 16px;
+}
+
+.persona-preview-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.persona-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.persona-avatar-large {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.persona-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.persona-info p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+.persona-colors {
+  margin-bottom: 16px;
+}
+
+.color-palette {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.persona-fonts {
+  margin-bottom: 16px;
+}
+
+.font-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.font-sample {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.font-sample.heading {
+  font-weight: 600;
+}
+
+.apply-button {
+  width: 100%;
+  margin-top: 16px !important;
+  background-color: #0066cc !important;
+  color: white !important;
+  font-weight: bold !important;
+  padding: 12px !important;
+  border-radius: 6px !important;
+}
+
+/* Mood Shift Panel Styles */
+.mood-shift-panel {
+  padding: 16px 0;
+}
+
+.mood-shift-panel h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.mood-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.mood-input-section {
+  margin-bottom: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.suggestions {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.suggestions-label {
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+.suggestion-chip {
+  display: inline-block;
+  padding: 4px 8px;
+  margin: 0 4px 4px 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggestion-chip:hover {
+  background: #e0e0e0;
+}
+
+.error-message {
+  padding: 12px;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 8px;
+  color: #c62828;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.mood-result {
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
+  margin-bottom: 16px;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.result-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.clear-button:hover {
+  background: #e0e0e0;
+}
+
+.confidence-bar {
+  margin-bottom: 12px;
+}
+
+.confidence-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.confidence-meter {
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  transition: width 0.3s ease;
+}
+
+.persona-match p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.extracted-keywords {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.apply-detected-button {
+  width: 100%;
+}
+
+.no-match p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.all-scores ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: #666;
+}
+
+.mood-examples {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.mood-examples summary {
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.mood-examples ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: #666;
+}
+
+.mood-examples li {
+  margin-bottom: 4px;
+  font-style: italic;
+}
+
+/* Voice Prompt Input Styles */
+.voice-prompt-input {
+  margin-bottom: 16px;
+}
+
+.voice-button {
+  min-width: 80px;
+}
+
+.voice-error {
+  padding: 8px;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  color: #c62828;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.voice-status {
+  margin-top: 8px;
+  padding: 8px;
+  background: #e3f2fd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.listening-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #1976d2;
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  background: #1976d2;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Badges Panel Styles */
+.badges-panel {
+  padding: 16px 0;
+}
+
+.badges-panel h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.stats {
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badges-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.badge.earned {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge.locked {
+  background: #f5f5f5;
+  color: #999;
+  border: 1px solid #e0e0e0;
+}
+
+.badge-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.badge-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.badge-desc {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.used-personas {
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.used-personas h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.persona-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.persona-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.chip-avatar {
+  font-size: 14px;
+}
+
+.chip-name {
+  font-weight: 500;
+}
+
+/* Applying Overlay */
+.applying-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.applying-message {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .persona-playground-app {
+    max-width: 100%;
+    padding: 12px;
+  }
+  
+  .app-header h1 {
+    font-size: 20px;
+  }
+  
+  .persona-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .input-actions {
+    flex-direction: column;
+  }
+  
+  .color-palette {
+    justify-content: center;
+  }
+}

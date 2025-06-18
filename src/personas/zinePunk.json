@@ -1,0 +1,32 @@
+{
+  "id": "zine-punk",
+  "name": "Zine Punk",
+  "description": "Raw, rebellious, DIY aesthetic with collage elements and bold typography",
+  "avatar": "⚡",
+  "theme": {
+    "colors": {
+      "primary": "#FF0040",
+      "secondary": "#00FF00",
+      "accent": "#FFFF00",
+      "background": "#000000",
+      "surface": "#1A1A1A",
+      "text": "#FFFFFF"
+    },
+    "fonts": {
+      "heading": "Permanent Marker",
+      "body": "Courier New",
+      "accent": "Impact"
+    }
+  },
+  "elements": {
+    "shapes": ["torn", "rough", "grunge", "splatter"],
+    "stickers": ["skull", "lightning", "anarchy", "spray", "safety-pin"],
+    "overlays": ["grunge", "noise", "torn-paper", "ink-splatter"]
+  },
+  "layoutRules": {
+    "alignment": "chaotic",
+    "spacing": "tight",
+    "hierarchy": "rebellious"
+  },
+  "keywords": ["punk", "grunge", "rebellious", "raw", "DIY", "vintage", "sarcastic", "edgy"]
+}

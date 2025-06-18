@@ -1,0 +1,32 @@
+{
+  "id": "kawaii-artist",
+  "name": "Kawaii Artist",
+  "description": "Cute, colorful, anime-inspired designs with playful elements",
+  "avatar": "🌸",
+  "theme": {
+    "colors": {
+      "primary": "#FF69B4",
+      "secondary": "#FFB6C1",
+      "accent": "#87CEEB",
+      "background": "#FFF8DC",
+      "surface": "#FFFFFF",
+      "text": "#4A4A4A"
+    },
+    "fonts": {
+      "heading": "Fredoka One",
+      "body": "Nunito",
+      "accent": "Comfortaa"
+    }
+  },
+  "elements": {
+    "shapes": ["heart", "star", "cloud", "bubble"],
+    "stickers": ["cat", "cherry", "rainbow", "sparkles", "moon"],
+    "overlays": ["polka-dots", "hearts", "stars"]
+  },
+  "layoutRules": {
+    "alignment": "playful",
+    "spacing": "cozy",
+    "hierarchy": "friendly"
+  },
+  "keywords": ["cute", "kawaii", "anime", "colorful", "sweet", "playful", "adorable"]
+}

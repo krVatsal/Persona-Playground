@@ -1,0 +1,32 @@
+{
+  "id": "futurist-ui",
+  "name": "Futurist UI",
+  "description": "Clean, minimal, tech-forward design with geometric elements",
+  "avatar": "🚀",
+  "theme": {
+    "colors": {
+      "primary": "#00D4FF",
+      "secondary": "#FF6B00",
+      "accent": "#00FF88",
+      "background": "#0A0A0F",
+      "surface": "#1A1A2E",
+      "text": "#FFFFFF"
+    },
+    "fonts": {
+      "heading": "Orbitron",
+      "body": "Inter",
+      "accent": "JetBrains Mono"
+    }
+  },
+  "elements": {
+    "shapes": ["geometric", "grid", "circuit"],
+    "stickers": ["rocket", "gear", "lightning", "atom"],
+    "overlays": ["grid", "scan-lines", "hologram"]
+  },
+  "layoutRules": {
+    "alignment": "center",
+    "spacing": "wide",
+    "hierarchy": "minimal"
+  },
+  "keywords": ["tech", "futuristic", "minimal", "sci-fi", "modern", "digital"]
+}
