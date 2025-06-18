@@ -10,11 +10,31 @@ export async function applyPersonaToDocument(persona, addOnUISdk) {
   try {
     console.log('🎨 Applying persona:', persona.name);
     console.log('📋 Persona details:', persona);
-    
-    // Validate inputs
+      // Validate inputs
     if (!persona || !addOnUISdk) {
       console.error('❌ Missing persona or SDK');
       return false;
+    }
+    
+    // Check for demo mode (when Adobe Express SDK is not available)
+    const DEMO_MODE = !addOnUISdk.app || !addOnUISdk.app.document;
+    
+    if (DEMO_MODE) {
+      console.log('🧪 Demo mode: Simulating persona application...');
+      
+      // Simulate the persona application process
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
+      
+      console.log('📋 Would apply the following changes:');
+      console.log('- Background color:', persona.theme?.colors?.background);
+      console.log('- Text color:', persona.theme?.colors?.text);
+      console.log('- Primary color:', persona.theme?.colors?.primary);
+      console.log('- Heading font:', persona.theme?.fonts?.heading);
+      console.log('- Body font:', persona.theme?.fonts?.body);
+      console.log('- Stickers:', persona.theme?.stickers?.join(', '));
+      
+      console.log('✅ Demo: Persona would be applied successfully!');
+      return true;
     }
     
     // Get document context
@@ -187,27 +207,5 @@ export function getPersonaPreviewStyles(persona) {
     fontFamily: persona.theme.fonts?.heading || 'inherit',
     '--primary-color': persona.theme.colors.primary,
     '--secondary-color': persona.theme.colors.secondary,
-    '--accent-color': persona.theme.colors.accent
-  };
-}
-
-// Add a demo mode for testing
-const DEMO_MODE = !addOnUISdk || !addOnUISdk.app || !addOnUISdk.app.document;
-
-if (DEMO_MODE) {
-  console.log('🧪 Demo mode: Simulating persona application...');
-  
-  // Simulate the persona application process
-  await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
-  
-  console.log('📋 Would apply the following changes:');
-  console.log('- Background color:', persona.theme?.colors?.background);
-  console.log('- Text color:', persona.theme?.colors?.text);
-  console.log('- Primary color:', persona.theme?.colors?.primary);
-  console.log('- Heading font:', persona.theme?.fonts?.heading);
-  console.log('- Body font:', persona.theme?.fonts?.body);
-  console.log('- Stickers:', persona.theme?.stickers?.join(', '));
-  
-  console.log('✅ Demo: Persona would be applied successfully!');
-  return true;
+    '--accent-color': persona.theme.colors.accent  };
 }
