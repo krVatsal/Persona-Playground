@@ -1,0 +1,358 @@
+/* Version Control Component Styles */
+.version-control-container {
+    padding: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.version-control-header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.version-control-header h2 {
+    margin: 0 0 8px 0;
+    color: #2c2c2c;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.version-control-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Mock mode indicator */
+.mock-mode-indicator {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    color: #856404;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* Capture Section */
+.capture-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.capture-section h3 {
+    margin: 0 0 12px 0;
+    color: #2c2c2c;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.capture-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Custom input styling to match Spectrum design */
+.snapshot-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #ffffff;
+    color: #2c2c2c;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.snapshot-input:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 1px #0066cc;
+}
+
+.snapshot-input:disabled {
+    background: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.snapshot-input::placeholder {
+    color: #999;
+}
+
+/* Status Message */
+.status-message {
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Snapshots Section */
+.snapshots-section {
+    margin-bottom: 24px;
+}
+
+.snapshots-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.snapshots-header h3 {
+    margin: 0;
+    color: #2c2c2c;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
+}
+
+.empty-state p {
+    margin: 4px 0;
+}
+
+.empty-state p:first-child {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Snapshots List */
+.snapshots-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.snapshot-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.snapshot-item:hover {
+    border-color: #0066cc;
+    box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
+}
+
+.snapshot-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.snapshot-name {
+    font-weight: 600;
+    color: #2c2c2c;
+    font-size: 14px;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.snapshot-timestamp {
+    font-size: 12px;
+    color: #666;
+}
+
+.snapshot-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+/* Help Section */
+.help-section {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #e9ecef;
+}
+
+.help-section details {
+    background: #f8f9fa;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.help-section summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #495057;
+    background: #e9ecef;
+    border: none;
+    outline: none;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.help-section summary:hover {
+    background: #dee2e6;
+}
+
+.help-section summary:focus {
+    background: #dee2e6;
+    box-shadow: inset 0 0 0 2px #0066cc;
+}
+
+.help-content {
+    padding: 16px;
+}
+
+.help-content ol {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+}
+
+.help-content li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: #495057;
+}
+
+.help-content strong {
+    color: #2c2c2c;
+}
+
+.help-content p {
+    margin: 8px 0 0 0;
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 320px) {
+    .version-control-container {
+        padding: 12px;
+    }
+    
+    .capture-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .capture-controls > * {
+        margin: 0 0 8px 0;
+    }
+    
+    .snapshot-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .snapshot-actions {
+        margin-left: 0;
+        justify-content: center;
+    }
+}
+
+/* Dark theme support (if needed) */
+@media (prefers-color-scheme: dark) {
+    .version-control-container {
+        background: #1a1a1a;
+        color: #ffffff;
+    }
+    
+    .version-control-header h2,
+    .capture-section h3,
+    .snapshots-header h3,
+    .snapshot-name,
+    .help-content strong {
+        color: #ffffff;
+    }
+    
+    .version-control-header p,
+    .snapshot-timestamp,
+    .help-content li,
+    .help-content p {
+        color: #cccccc;
+    }
+    
+    .capture-section {
+        background: #2a2a2a;
+        border-color: #404040;
+    }
+    
+    .snapshot-item {
+        background: #2a2a2a;
+        border-color: #404040;
+    }
+    
+    .snapshot-item:hover {
+        border-color: #4285f4;
+        box-shadow: 0 2px 4px rgba(66, 133, 244, 0.2);
+    }
+    
+    .empty-state {
+        background: #2a2a2a;
+        border-color: #404040;
+        color: #cccccc;
+    }
+    
+    .help-section {
+        border-top-color: #404040;
+    }
+    
+    .help-section details {
+        background: #2a2a2a;
+    }
+    
+    .help-section summary {
+        background: #404040;
+        color: #ffffff;
+    }
+    
+    .help-section summary:hover,
+    .help-section summary:focus {
+        background: #4a4a4a;
+    }
+}

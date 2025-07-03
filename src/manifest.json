@@ -1,0 +1,28 @@
+{
+    "testId": "93f9568b-5ec9-4cd3-9e57-6964f802f910",
+    "name": "Design Version Control",
+    "version": "1.0.0",
+    "manifestVersion": 2,
+    "requirements": {
+        "apps": [
+            {
+                "name": "Express",
+                "apiVersion": 1
+            }
+        ]
+    },
+    "entryPoints": [
+        {
+            "type": "panel",
+            "id": "panel1",
+            "main": "index.html"
+        }
+    ],
+    "sandboxes": [
+        {
+            "type": "documentSandbox",
+            "id": "documentSandbox1",
+            "main": "sandbox/document.js"
+        }
+    ]
+}
