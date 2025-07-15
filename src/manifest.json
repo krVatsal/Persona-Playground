@@ -15,14 +15,8 @@
         {
             "type": "panel",
             "id": "panel1",
-            "main": "index.html"
-        }
-    ],
-    "sandboxes": [
-        {
-            "type": "documentSandbox",
-            "id": "documentSandbox1",
-            "main": "sandbox/document.js"
+            "main": "index.html",
+            "documentSandbox": "sandbox/code.js"
         }
     ]
 }

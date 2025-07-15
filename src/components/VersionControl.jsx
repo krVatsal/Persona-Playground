@@ -8,82 +8,185 @@ const VersionControl = ({ addOnUISdk }) => {
     const [newSnapshotName, setNewSnapshotName] = useState("");
     const [statusMessage, setStatusMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [sandboxProxy, setSandboxProxy] = useState(null);
-
-    // Store mock snapshots outside the function to persist between calls
+    const [confirmingDelete, setConfirmingDelete] = useState(null);
     const [mockSnapshots, setMockSnapshots] = useState([]);
 
-    // Initialize sandbox proxy
-    useEffect(() => {
-        if (addOnUISdk) {
-            const proxy = addOnUISdk.app.devFlags?.isDevMode 
-                ? addOnUISdk.app.document
-                : addOnUISdk.app.document;
-            setSandboxProxy(proxy);
-        }
-    }, [addOnUISdk]);
-
-    // Load snapshots on component mount
-    useEffect(() => {
-        // Load snapshots after a short delay to ensure everything is initialized
-        const timer = setTimeout(() => {
-            loadSnapshots();
-        }, 100);
-        
-        return () => clearTimeout(timer);
-    }, [addOnUISdk]);
-
-    // Get document sandbox proxy
-    const getDocumentSandbox = () => {
-        try {
-            // Check if the runtime API proxy is available
-            if (addOnUISdk?.runtime?.apiProxy) {
-                return addOnUISdk.runtime.apiProxy("documentSandbox");
-            } else if (addOnUISdk?.app?.runtime?.apiProxy) {
-                return addOnUISdk.app.runtime.apiProxy("documentSandbox");
-            } else {
-                console.warn("Runtime API proxy not available, using mock for development");
-                // Return a mock sandbox for development/testing
-                return createMockSandbox();
+    const getDocumentSandbox = async () => {
+        if (addOnUISdk?.app?.document) {
+            const documentAPI = addOnUISdk.app.document;
+            if (documentAPI.createRenditions || documentAPI.addImage || documentAPI.id) {
+                setStatusMessage("Connected successfully");
+                return createDocumentAPIWrapper(documentAPI);
             }
-        } catch (error) {
-            console.error("Failed to get document sandbox proxy:", error);
-            setStatusMessage("Error: Could not connect to document sandbox");
-            return null;
         }
+        setStatusMessage("Ready to capture snapshots");
+        return createMockSandbox();
     };
+
+    const createDocumentAPIWrapper = (documentAPI) => {
+        return {
+            saveSnapshot: async (name) => {
+                let thumbnail = null;
+                if (documentAPI.createRenditions) {
+                    try {
+                        const response = await documentAPI.createRenditions({
+                            range: "currentPage",
+                            format: "image/jpeg",
+                        });
+                        if (response && response[0]) {
+                            thumbnail = URL.createObjectURL(response[0].blob);
+                        }
+                    } catch {}
+                }
+                let documentInfo = {};
+                try {
+                    if (documentAPI.id) documentInfo.documentId = documentAPI.id;
+                    if (documentAPI.title) documentInfo.title = documentAPI.title;
+                    if (documentAPI.getPagesMetadata) {
+                        const pages = await documentAPI.getPagesMetadata();
+                        documentInfo.pageCount = pages?.length || 1;
+                    }
+                } catch {}
+                const snapshot = {
+                    id: Date.now().toString(),
+                    name: name,
+                    timestamp: new Date().toISOString(),
+                    thumbnail: thumbnail,
+                    documentInfo: documentInfo,
+                    type: 'snapshot'
+                };
+                setMockSnapshots(prev => [...prev, snapshot]);
+                return { success: true, snapshot };
+            },
+            listSnapshots: async () => {
+                return new Promise((resolve) => {
+                    setMockSnapshots(current => {
+                        resolve({ success: true, snapshots: current });
+                        return current;
+                    });
+                });
+            },
+            restoreSnapshot: async (index) => {
+                return new Promise((resolve) => {
+                    setMockSnapshots(current => {
+                        if (index >= 0 && index < current.length) {
+                            const snapshot = current[index];
+                            let details = `Name: "${snapshot.name}"`;
+                            if (snapshot.documentInfo?.pageCount) {
+                                details += ` | Pages: ${snapshot.documentInfo.pageCount}`;
+                            }
+                            if (snapshot.documentInfo?.documentId) {
+                                details += ` | Document: ${snapshot.documentInfo.documentId}`;
+                            }
+                            resolve({
+                                success: true,
+                                message: `Snapshot info loaded - ${details}.`
+                            });
+                        } else {
+                            resolve({ success: false, error: "Invalid snapshot index" });
+                        }
+                        return current;
+                    });
+                });
+            },
+            downloadSnapshot: async (index) => {
+                return new Promise((resolve) => {
+                    setMockSnapshots(current => {
+                        if (index >= 0 && index < current.length) {
+                            const snapshot = current[index];
+                            const downloadData = {
+                                name: snapshot.name,
+                                timestamp: snapshot.timestamp,
+                                documentInfo: snapshot.documentInfo,
+                                thumbnail: snapshot.thumbnail,
+                                type: 'snapshot-export',
+                                exportedAt: new Date().toISOString()
+                            };
+                            const dataStr = JSON.stringify(downloadData, null, 2);
+                            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                            const exportFileDefaultName = `snapshot_${snapshot.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${Date.now()}.json`;
+                            const linkElement = document.createElement('a');
+                            linkElement.setAttribute('href', dataUri);
+                            linkElement.setAttribute('download', exportFileDefaultName);
+                            document.body.appendChild(linkElement);
+                            linkElement.click();
+                            document.body.removeChild(linkElement);
+                            resolve({ success: true, message: `Downloaded "${snapshot.name}" as ${exportFileDefaultName}` });
+                        } else {
+                            resolve({ success: false, error: "Invalid snapshot index" });
+                        }
+                        return current;
+                    });
+                });
+            },
+            deleteSnapshot: async (index) => {
+                return new Promise((resolve) => {
+                    setMockSnapshots(current => {
+                        if (index >= 0 && index < current.length) {
+                            const deleted = current[index];
+                            const updated = current.filter((_, i) => i !== index);
+                            resolve({ success: true, message: `Deleted: ${deleted.name}` });
+                            return updated;
+                        } else {
+                            resolve({ success: false, error: "Invalid snapshot index" });
+                            return current;
+                        }
+                    });
+                });
+            }
+        };
+    };
+
+// Duplicate createMockSandbox removed
+// (removed duplicate/broken code)
 
     // Create a mock sandbox for development/testing
     const createMockSandbox = () => {
         return {
             saveSnapshot: async (name) => {
-                const snapshot = {
-                    id: Date.now().toString(),
-                    name: name,
-                    timestamp: new Date().toISOString()
-                };
-                setMockSnapshots(prev => {
-                    const updated = [...prev, snapshot];
-                    console.log("Mock: Snapshot saved", snapshot);
-                    console.log("Mock: Total snapshots now:", updated.length);
-                    return updated;
-                });
-                return {
-                    success: true,
-                    snapshot: snapshot
-                };
+                try {
+                    let thumbnail = null;
+                    if (addOnUISdk?.app?.document?.createRenditions) {
+                        try {
+                            const response = await addOnUISdk.app.document.createRenditions({
+                                range: "currentPage",
+                                format: "image/jpeg",
+                            });
+                            if (response && response[0]) {
+                                thumbnail = URL.createObjectURL(response[0].blob);
+                            }
+                        } catch (thumbError) {
+                            // Silently handle thumbnail errors
+                        }
+                    }
+
+                    const snapshot = {
+                        id: Date.now().toString(),
+                        name: name,
+                        timestamp: new Date().toISOString(),
+                        thumbnail: thumbnail
+                    };
+                    setMockSnapshots(prev => [...prev, snapshot]);
+                    return {
+                        success: true,
+                        snapshot: snapshot
+                    };
+                } catch (error) {
+                    return {
+                        success: false,
+                        error: error.message
+                    };
+                }
             },
             
             listSnapshots: async () => {
-                // Use a callback to get the current state value
                 return new Promise((resolve) => {
                     setMockSnapshots(current => {
-                        console.log("Mock: Listing snapshots", current);
                         resolve({
                             success: true,
                             snapshots: current
                         });
-                        return current; // Don't change the state
+                        return current;
                     });
                 });
             },
@@ -92,10 +195,9 @@ const VersionControl = ({ addOnUISdk }) => {
                 return new Promise((resolve) => {
                     setMockSnapshots(current => {
                         if (index >= 0 && index < current.length) {
-                            console.log("Mock: Restoring snapshot", current[index]);
                             resolve({
                                 success: true,
-                                message: `Mock restored: ${current[index].name}`
+                                message: `Restored: ${current[index].name}`
                             });
                         } else {
                             resolve({
@@ -103,7 +205,45 @@ const VersionControl = ({ addOnUISdk }) => {
                                 error: "Invalid snapshot index"
                             });
                         }
-                        return current; // Don't change the state
+                        return current;
+                    });
+                });
+            },
+            
+            downloadSnapshot: async (index) => {
+                return new Promise((resolve) => {
+                    setMockSnapshots(current => {
+                        if (index >= 0 && index < current.length) {
+                            const snapshot = current[index];
+                            
+                            const downloadData = {
+                                name: snapshot.name,
+                                timestamp: snapshot.timestamp,
+                                thumbnail: snapshot.thumbnail,
+                                type: 'snapshot-export',
+                                exportedAt: new Date().toISOString()
+                            };
+                            
+                            const dataStr = JSON.stringify(downloadData, null, 2);
+                            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                            const exportFileDefaultName = `snapshot_${snapshot.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${Date.now()}.json`;
+                            
+                            const linkElement = document.createElement('a');
+                            linkElement.setAttribute('href', dataUri);
+                            linkElement.setAttribute('download', exportFileDefaultName);
+                            linkElement.click();
+                            
+                            resolve({
+                                success: true,
+                                message: `Downloaded "${snapshot.name}" as ${exportFileDefaultName}`
+                            });
+                        } else {
+                            resolve({
+                                success: false,
+                                error: "Invalid snapshot index"
+                            });
+                        }
+                        return current;
                     });
                 });
             },
@@ -114,10 +254,9 @@ const VersionControl = ({ addOnUISdk }) => {
                         if (index >= 0 && index < current.length) {
                             const deleted = current[index];
                             const updated = current.filter((_, i) => i !== index);
-                            console.log("Mock: Deleted snapshot", deleted);
                             resolve({
                                 success: true,
-                                message: `Mock deleted: ${deleted.name}`
+                                message: `Deleted: ${deleted.name}`
                             });
                             return updated;
                         } else {
@@ -137,7 +276,7 @@ const VersionControl = ({ addOnUISdk }) => {
     const loadSnapshots = async () => {
         try {
             setIsLoading(true);
-            const sandbox = getDocumentSandbox();
+            const sandbox = await getDocumentSandbox();
             if (!sandbox) return;
 
             const result = await sandbox.listSnapshots();
@@ -148,7 +287,6 @@ const VersionControl = ({ addOnUISdk }) => {
                 setStatusMessage(`Error loading snapshots: ${result.error}`);
             }
         } catch (error) {
-            console.error("Error loading snapshots:", error);
             setStatusMessage(`Error loading snapshots: ${error.message}`);
         } finally {
             setIsLoading(false);
@@ -157,8 +295,6 @@ const VersionControl = ({ addOnUISdk }) => {
 
     // Capture a new snapshot
     const captureSnapshot = async () => {
-        console.log("Capture snapshot called with name:", newSnapshotName);
-        
         if (!newSnapshotName.trim()) {
             setStatusMessage("Please enter a name for the snapshot");
             return;
@@ -168,19 +304,18 @@ const VersionControl = ({ addOnUISdk }) => {
             setIsLoading(true);
             setStatusMessage("Capturing snapshot...");
             
-            const sandbox = getDocumentSandbox();
+            const sandbox = await getDocumentSandbox();
             if (!sandbox) return;
 
             const result = await sandbox.saveSnapshot(newSnapshotName.trim());
             if (result.success) {
                 setStatusMessage(`Snapshot "${result.snapshot.name}" captured successfully`);
                 setNewSnapshotName("");
-                await loadSnapshots(); // Refresh the list
+                await loadSnapshots();
             } else {
                 setStatusMessage(`Error capturing snapshot: ${result.error}`);
             }
         } catch (error) {
-            console.error("Error capturing snapshot:", error);
             setStatusMessage(`Error capturing snapshot: ${error.message}`);
         } finally {
             setIsLoading(false);
@@ -193,7 +328,7 @@ const VersionControl = ({ addOnUISdk }) => {
             setIsLoading(true);
             setStatusMessage(`Restoring snapshot "${snapshots[index].name}"...`);
             
-            const sandbox = getDocumentSandbox();
+            const sandbox = await getDocumentSandbox();
             if (!sandbox) return;
 
             const result = await sandbox.restoreSnapshot(index);
@@ -203,7 +338,6 @@ const VersionControl = ({ addOnUISdk }) => {
                 setStatusMessage(`Error restoring snapshot: ${result.error}`);
             }
         } catch (error) {
-            console.error("Error restoring snapshot:", error);
             setStatusMessage(`Error restoring snapshot: ${error.message}`);
         } finally {
             setIsLoading(false);
@@ -212,30 +346,60 @@ const VersionControl = ({ addOnUISdk }) => {
 
     // Delete a snapshot
     const deleteSnapshot = async (index) => {
-        if (!window.confirm(`Are you sure you want to delete "${snapshots[index].name}"?`)) {
-            return;
+        setConfirmingDelete(index);
+    };
+
+    // Download a snapshot
+    const downloadSnapshot = async (index) => {
+        try {
+            setIsLoading(true);
+            setStatusMessage(`Downloading snapshot "${snapshots[index].name}"...`);
+            
+            const sandbox = await getDocumentSandbox();
+            if (!sandbox) return;
+
+            const result = await sandbox.downloadSnapshot(index);
+            if (result.success) {
+                setStatusMessage(result.message);
+            } else {
+                setStatusMessage(`Error downloading snapshot: ${result.error}`);
+            }
+        } catch (error) {
+            setStatusMessage(`Error downloading snapshot: ${error.message}`);
+        } finally {
+            setIsLoading(false);
         }
+    };
+
+    // Confirm delete action
+    const confirmDelete = async () => {
+        const index = confirmingDelete;
+        setConfirmingDelete(null);
 
         try {
             setIsLoading(true);
             setStatusMessage(`Deleting snapshot "${snapshots[index].name}"...`);
             
-            const sandbox = getDocumentSandbox();
+            const sandbox = await getDocumentSandbox();
             if (!sandbox) return;
 
             const result = await sandbox.deleteSnapshot(index);
             if (result.success) {
                 setStatusMessage(result.message);
-                await loadSnapshots(); // Refresh the list
+                await loadSnapshots();
             } else {
                 setStatusMessage(`Error deleting snapshot: ${result.error}`);
             }
         } catch (error) {
-            console.error("Error deleting snapshot:", error);
             setStatusMessage(`Error deleting snapshot: ${error.message}`);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    // Cancel delete action
+    const cancelDelete = () => {
+        setConfirmingDelete(null);
     };
 
     // Format timestamp for display
@@ -262,12 +426,6 @@ const VersionControl = ({ addOnUISdk }) => {
                 <header className="version-control-header">
                     <h2>Design Version Control</h2>
                     <p>Capture, manage, and restore design snapshots</p>
-                    {/* Mock mode indicator */}
-                    {!addOnUISdk?.app?.runtime?.apiProxy && (
-                        <div className="mock-mode-indicator">
-                            🧪 <strong>Mock Mode</strong> - Load in Adobe Express for real functionality
-                        </div>
-                    )}
                 </header>
 
                 {/* Capture New Snapshot Section */}
@@ -300,6 +458,13 @@ const VersionControl = ({ addOnUISdk }) => {
                     </div>
                 )}
 
+                {/* Confirmation Message */}
+                {confirmingDelete !== null && (
+                    <div className="status-message warning">
+                        ⚠️ Click "Confirm" to permanently delete "{snapshots[confirmingDelete]?.name}" or "Cancel" to abort.
+                    </div>
+                )}
+
                 {/* Snapshots List Section */}
                 <section className="snapshots-section">
                     <div className="snapshots-header">
@@ -329,10 +494,20 @@ const VersionControl = ({ addOnUISdk }) => {
                         <div className="snapshots-list">
                             {snapshots.map((snapshot, index) => (
                                 <div key={snapshot.id} className="snapshot-item">
+                                    {snapshot.thumbnail && (
+                                        <div className="snapshot-thumbnail">
+                                            <img src={snapshot.thumbnail} alt={`Snapshot: ${snapshot.name}`} />
+                                        </div>
+                                    )}
                                     <div className="snapshot-info">
-                                        <div className="snapshot-name">{snapshot.name}</div>
+                                        <div className="snapshot-name">
+                                            {snapshot.name}
+                                        </div>
                                         <div className="snapshot-timestamp">
                                             {formatTimestamp(snapshot.timestamp)}
+                                            {snapshot.documentInfo?.pageCount && (
+                                                <span className="page-info"> • {snapshot.documentInfo.pageCount} page{snapshot.documentInfo.pageCount !== 1 ? 's' : ''}</span>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="snapshot-actions">
@@ -345,13 +520,42 @@ const VersionControl = ({ addOnUISdk }) => {
                                             Restore
                                         </Button>
                                         <Button
-                                            variant="negative"
+                                            variant="secondary"
                                             size="s"
-                                            onClick={() => deleteSnapshot(index)}
+                                            onClick={() => downloadSnapshot(index)}
                                             disabled={isLoading}
                                         >
-                                            Delete
+                                            Download
                                         </Button>
+                                        {confirmingDelete === index ? (
+                                            <>
+                                                <Button
+                                                    variant="negative"
+                                                    size="s"
+                                                    onClick={confirmDelete}
+                                                    disabled={isLoading}
+                                                >
+                                                    Confirm
+                                                </Button>
+                                                <Button
+                                                    variant="secondary"
+                                                    size="s"
+                                                    onClick={cancelDelete}
+                                                    disabled={isLoading}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <Button
+                                                variant="negative"
+                                                size="s"
+                                                onClick={() => deleteSnapshot(index)}
+                                                disabled={isLoading}
+                                            >
+                                                Delete
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
                             ))}
